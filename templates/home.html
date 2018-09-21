@@ -1,44 +1,22 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
+<link rel="stylesheet" type="text/css" href="../static/css/mystyle.css">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-<script type="text/javascript" charset="utf-8">
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
-    socket.on('connect', function () {
-        socket.emit('my event', {data: 'I\'m connected!'});
-    });
-</script>
+<script type="text/javascript" src="../static/js/myscript.js"></script>
 
 <head>
     <meta charset="UTF-8">
-    <title>AAAAAA</title>
+    <title>Home</title>
 </head>
+
 <body>
-<button id="pressMe">PRESS ME</button>
-
-<label>Some data:</label>
-<p id="someData"></p>
-
-<img id="myImage" height='500' width='500' src="../static/light_off.png">
+<div id="cf">
+    <img id="lightOff" class="bottom" src="../static/pic_bulboff.gif">
+    <img id="lightOn" class="top" src="../static/pic_bulbon.gif">
+</div>
+<input id="rangeSlider" type="range" min="1" max="100" value="0" class="slider" style="width: 50%">
 </body>
+
 </html>
-
-
-<script>
-    pressMe.onclick = function () {
-        socket.emit("buttonPressed")
-    };
-
-    var light = 'off';
-
-    socket.on("buttonData", function (msg) {
-        document.getElementById("someData").innerHTML = msg;
-        if (light === 'off') {
-            document.getElementById('myImage').src = '../static/light_on.png';
-            light = 'on';
-        }
-        else {
-            document.getElementById('myImage').src = '../static/light_off.png';
-            light = 'off';
-        }
-    })
-</script>

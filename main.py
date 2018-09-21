@@ -1,53 +1,36 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO
+from flaskThread import FlaskThread, socketio
 import time
-from threading import Thread
+from light import Light
+import Adafruit_ADS1x15 as ADS
+from dimmer import Dimmer
 import RPi.GPIO as GPIO
+from potentiometer import Potentiometer
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
-app.config['SECRET_KEY'] = 'secret!'
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-socketio = SocketIO(app)
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
 
-
-@app.route("/")
-@app.route("/home")
-def home():
-    return render_template('home.html')
-
-
-@socketio.on('my event')
-def handle_message(message):
-    print('received message: ' + str(message))
-
-
-@socketio.on('buttonPressed')
-def handle_message():
-    print('button pressed')
-    data = 2
-    socketio.emit("buttonData", data)
-
-
-class FlaskThread(Thread):
-    def run(self):
-        socketio.run(app, host="0.0.0.0")
-
-
-def turnOnLight():
-    pass
-
-
-def turnOffLight():
-    pass
-
+ledPin = 27
+adcAddress = 0x48
+adcBusNumber = 1
+adcRange = 32767
 
 if __name__ == '__main__':
+    adc = ADS.ADS1115(address=adcAddress, busnum=adcBusNumber)
+    potentiometer = Potentiometer(adc)
+
+    light = Light(ledPin, GPIO)
+    dimmer = Dimmer(light, adcRange)
+    dimmer.start()
+
     f = FlaskThread()
     f.start()
 
+    previousSliderValue = 0
     while True:
-        # BLINK
-        turnOnLight()
-        time.sleep(1)
-        turnOffLight()
-        time.sleep(1)
+        sliderValue = int(potentiometer.resistance / 32768 * 100)
+        if sliderValue != previousSliderValue:
+            previousSliderValue = sliderValue
+            socketio.emit("sliderValue", sliderValue)
+            dimmer.value = potentiometer.resistance
+
+        time.sleep(0.1)
