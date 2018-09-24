@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/flask-socket.iml" filepath="$PROJECT_DIR$/.idea/flask-socket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/python-for-hardware.iml" filepath="$PROJECT_DIR$/.idea/python-for-hardware.iml" />
     </modules>
   </component>
 </project>
