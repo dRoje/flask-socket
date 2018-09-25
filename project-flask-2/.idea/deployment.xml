@@ -12,7 +12,7 @@
       <paths name="pi projekt">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/pi/python-for-hardware/project-flask" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/pi/python-for-hardware/project-flask-2" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

@@ -13,24 +13,23 @@ ledPin = 27
 adcAddress = 0x48
 adcBusNumber = 1
 adcRange = 32767
+sliderRange = 100
 
-if __name__ == '__main__':
-    adc = ADS.ADS1115(address=adcAddress, busnum=adcBusNumber)
-    potentiometer = Potentiometer(adc)
+adc = ADS.ADS1115(address=adcAddress, busnum=adcBusNumber)
+potentiometer = Potentiometer(adc)
+light = Light(ledPin, GPIO)
+dimmer = Dimmer(light, adcRange)
+dimmer.start()
+f = FlaskThread()
+f.start()
 
-    light = Light(ledPin, GPIO)
-    dimmer = Dimmer(light, adcRange)
-    dimmer.start()
+previousSliderValue = 0
+while True:
+    resistance = potentiometer.resistance
+    sliderValue = int(resistance / adcRange * 100)
+    if sliderValue != previousSliderValue:
+        previousSliderValue = sliderValue
+        socketio.emit("sliderValue", sliderValue)
+        dimmer.value = resistance
 
-    f = FlaskThread()
-    f.start()
-
-    previousSliderValue = 0
-    while True:
-        sliderValue = int(potentiometer.resistance / 32768 * 100)
-        if sliderValue != previousSliderValue:
-            previousSliderValue = sliderValue
-            socketio.emit("sliderValue", sliderValue)
-            dimmer.value = potentiometer.resistance
-
-        time.sleep(0.1)
+    time.sleep(0.15)

@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO
 from threading import Thread
 import logging
+from slider import Slider
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config['SECRET_KEY'] = 'secret!'
@@ -20,8 +21,14 @@ def home():
 
 
 @socketio.on('connection')
-def handle_message(message):
+def connection(message):
     print('Connection established: ' + str(message))
+
+
+@socketio.on('demo')
+def demo():
+    print("DEMO")
+    Slider.demo = True
 
 
 class FlaskThread(Thread):

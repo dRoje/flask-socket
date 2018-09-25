@@ -2,19 +2,20 @@
 from light import Light
 from threading import Thread
 import time
+from multiprocessing import Process, Value
 
 
-class Dimmer(Thread):
+class Dimmer(Process):
     def __init__(self, light: Light, range: int):
-        Thread.__init__(self)
-        self.value = 0
+        Process.__init__(self)
+        self.val = Value('i', 0)
         self.frequency = 500
         self._light = light
         self._range = range
 
     def run(self):
         while True:
-            dutyOn = self.value / self._range
+            dutyOn = self.val.value / self._range
             dutyOff = 1 - dutyOn
             self._light.turnOn()
             time.sleep(dutyOn / self.frequency)
