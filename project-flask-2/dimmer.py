@@ -1,6 +1,5 @@
 # Created by Duje 
 from light import Light
-from threading import Thread
 import time
 from multiprocessing import Process, Value
 
@@ -8,16 +7,24 @@ from multiprocessing import Process, Value
 class Dimmer(Process):
     def __init__(self, light: Light, range: int):
         Process.__init__(self)
-        self.val = Value('i', 0)
-        self.frequency = 500
+        self._volume = Value('i', 0)
+        self._frequency = 500
         self._light = light
-        self._range = range
+        self.range = range
 
     def run(self):
         while True:
-            dutyOn = self.val.value / self._range
+            dutyOn = self._volume.value / self.range
             dutyOff = 1 - dutyOn
             self._light.turnOn()
-            time.sleep(dutyOn / self.frequency)
+            time.sleep(dutyOn / self._frequency)
             self._light.turnOff()
-            time.sleep(dutyOff / self.frequency)
+            time.sleep(dutyOff / self._frequency)
+
+    @property
+    def volume(self):
+        return self._volume.value
+
+    @volume.setter
+    def volume(self, volume: int):
+        self._volume.value = volume

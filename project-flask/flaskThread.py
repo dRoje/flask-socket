@@ -20,7 +20,7 @@ def home():
 
 
 @socketio.on('connection')
-def handle_message(message):
+def connection(message):
     print('Connection established: ' + str(message))
 
 
