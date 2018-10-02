@@ -1,10 +1,10 @@
 from flaskThread import FlaskThread, socketio
 import time
-from light import Light
-import Adafruit_ADS1x15 as ADS
+from consumer import Consumer
+from adc import Ads1115
 from dimmer import Dimmer
 import RPi.GPIO as GPIO
-from potentiometer import Potentiometer
+from potentiometer import AnalogPotentiometer
 from demo import Demo
 from messenger import Messenger
 
@@ -12,26 +12,23 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 ledPin = 27
-adcAddress = 0x48
-adcBusNumber = 1
-adcRange = 32767
-sliderRange = 100
 
-adc = ADS.ADS1115(address=adcAddress, busnum=adcBusNumber)
-potentiometer = Potentiometer(adc, adcRange, sliderRange)
-light = Light(ledPin, GPIO)
-dimmer = Dimmer(light, sliderRange)
+adc = Ads1115(address=0x48, busNumber=1, range=32767)
+light = Consumer(ledPin, GPIO)  # consumer can be reused for other purposes (fan, etc.) - Scalability
+potentiometer = AnalogPotentiometer(adc)  # tie classes to interfaces (potentiometer -> adc) - Modularity (change adc easily)
+dimmer = Dimmer(potentiometer, light, range=100)
 dimmer.start()
-demo = Demo(potentiometer, dimmer)
+demo = Demo(light)
 f = FlaskThread()
 f.start()
 
 while True:
     if Messenger.message == "demo":
+        dimmer.pause.value = True
         demo.showMeWhatYouGot()
         Messenger.message = ""
-    resistance = potentiometer.resistance
-    socketio.emit("sliderValue", resistance)
-    dimmer.volume = resistance
+        dimmer.pause.value = False
+    # socketio.emit("sliderValue", potentiometer.resistance) # DON'T do this! Avoid two processes accessing the same source (ADC in this case)
+    socketio.emit("sliderValue", dimmer.volume)
 
     time.sleep(0.1)

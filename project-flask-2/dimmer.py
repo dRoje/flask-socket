@@ -1,24 +1,30 @@
 # Created by Duje 
-from light import Light
+from consumer import Consumer
+from potentiometer import Potentiometer
 import time
 from multiprocessing import Process, Value
 
 
 class Dimmer(Process):
-    def __init__(self, light: Light, range: int):
+    def __init__(self, potentiometer: Potentiometer, consumer: Consumer, range: int):
         Process.__init__(self)
+        self.pause = Value('i', False)
         self._volume = Value('i', 0)
         self._frequency = 500
-        self._light = light
+        self._consumer = consumer
+        self._potentiometer = potentiometer
         self.range = range
 
     def run(self):
         while True:
+            if self.pause.value:
+                continue
+            self._volume.value = self._potentiometer.resistance
             dutyOn = self._volume.value / self.range
             dutyOff = 1 - dutyOn
-            self._light.turnOn()
+            self._consumer.turnOn()
             time.sleep(dutyOn / self._frequency)
-            self._light.turnOff()
+            self._consumer.turnOff()
             time.sleep(dutyOff / self._frequency)
 
     @property

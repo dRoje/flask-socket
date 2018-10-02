@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 
 
-class Light:
+class Consumer:
     def __init__(self, pin: int, gpio: GPIO):
         self._pin = pin
         self._gpio = gpio

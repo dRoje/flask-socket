@@ -94,16 +94,6 @@
               <item name="project-flask-bad" type="b2602c69:ProjectViewProjectNode" />
               <item name="project-flask-bad" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="project-flask-bad" type="b2602c69:ProjectViewProjectNode" />
-              <item name="project-flask-bad" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="project-flask-bad" type="b2602c69:ProjectViewProjectNode" />
-              <item name="project-flask-bad" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -177,7 +167,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" order="7" weight="0.20043573" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.29956427" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.29956427" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
